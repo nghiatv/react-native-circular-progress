@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, ViewPropTypes, TouchableOpacity } from 'react-native';
-import { Svg, Path, G, Circle } from 'react-native-svg';
+import { Path, G, Circle } from 'react-native-svg';
 
-export default class CircularProgress extends React.PureComponent {
+export default class ChildProgress extends React.PureComponent {
   polarToCartesian(centerX, centerY, radius, angleInDegrees) {
     var angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
     return {
@@ -32,40 +31,18 @@ export default class CircularProgress extends React.PureComponent {
       backgroundWidth,
       tintColor,
       backgroundColor,
-      style,
       rotation,
       lineCap,
       arcSweepAngle,
       fill,
-      children,
-      onPressLine
+      onPress
     } = this.props;
     const backgroundPath = this.circlePath(size / 2, size / 2, size / 2 - width / 2, 0, arcSweepAngle);
     const circlePath = this.circlePath(size / 2, size / 2, size / 2 - width / 2, 0, arcSweepAngle * this.clampFill(fill) / 100);
-    const offset = size - (width * 2);
     const startDot = this.polarToCartesian(size/2,size/2, size / 2 - width / 2,0)
     const stopDot = this.polarToCartesian(size/2,size/2, size / 2 - width / 2,arcSweepAngle * this.clampFill(fill) / 100)
-
-    const childContainerStyle = {
-      position: 'absolute',
-      left: width,
-      top: width,
-      width: offset,
-      height: offset,
-      borderRadius: offset / 2,
-      alignItems: 'center',
-      justifyContent: 'center',
-      overflow: 'hidden'
-    };
-
     return (
-      <View style={style}>
-        <Svg
-          width={size}
-          height={size}
-          style={{ backgroundColor: 'transparent' }}
-        >
-          <G rotation={rotation} originX={size/2} originY={size/2}>
+      <G onPressIn={onPress} rotation={rotation} originX={size/2} originY={size/2}>
             { backgroundColor && (
               <Path
                 d={backgroundPath}
@@ -76,8 +53,6 @@ export default class CircularProgress extends React.PureComponent {
               />
             )}
             <Path
-              onPressIn={() => console.log("gogogo")} style={{ zIndex: 1000}}
-              delayPressIn={0}
               d={circlePath}
               stroke={tintColor}
               strokeWidth={width}
@@ -101,19 +76,11 @@ export default class CircularProgress extends React.PureComponent {
             fill="transparent"
           />
           </G>
-        </Svg>
-        {children && (
-          <View style={childContainerStyle}>
-            {children(fill)}
-          </View>
-        )}
-      </View>
     );
   }
 }
 
-CircularProgress.propTypes = {
-  style: ViewPropTypes.style,
+ChildProgress.propTypes = {
   size: PropTypes.number.isRequired,
   fill: PropTypes.number.isRequired,
   width: PropTypes.number.isRequired,
@@ -123,11 +90,10 @@ CircularProgress.propTypes = {
   rotation: PropTypes.number,
   lineCap: PropTypes.string,
   arcSweepAngle: PropTypes.number,
-  children: PropTypes.func,
-  onPressLine: PropTypes.func
+  onPress: PropTypes.func
 };
 
-CircularProgress.defaultProps = {
+ChildProgress.defaultProps = {
   tintColor: 'black',
   rotation: 90,
   lineCap: 'butt',

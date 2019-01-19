@@ -7,10 +7,10 @@ import {
   View,
   ViewPropTypes
 } from 'react-native';
-import CircularProgress from './CircularProgress';
-const AnimatedProgress = Animated.createAnimatedComponent(CircularProgress);
+import MultiCircularProgress from './MultiCircularProgress';
+const AnimatedProgress = Animated.createAnimatedComponent(MultiCircularProgress);
 
-export default class AnimatedCircularProgress extends React.PureComponent {
+export default class AnimatedMultiCircularProgress extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -50,26 +50,25 @@ export default class AnimatedCircularProgress extends React.PureComponent {
   }
 
   render() {
-    const { fill, prefill, ...other } = this.props;
-    // console.log('other: ', other)
+    const { prefill, ...other } = this.props;
+    console.log('prefill: ', prefill)
     return (
       <AnimatedProgress
         {...other}
-        fill={this.state.fillAnimation}
       />
     );
   }
 }
 
-AnimatedCircularProgress.propTypes = {
-  ...CircularProgress.propTypes,
+AnimatedMultiCircularProgress.propTypes = {
+  ...MultiCircularProgress.propTypes,
   prefill: PropTypes.number,
   duration: PropTypes.number,
   easing: PropTypes.func,
   onAnimationComplete: PropTypes.func,
 };
 
-AnimatedCircularProgress.defaultProps = {
+AnimatedMultiCircularProgress.defaultProps = {
   duration: 500,
   easing: Easing.out(Easing.ease),
   prefill: 0,
